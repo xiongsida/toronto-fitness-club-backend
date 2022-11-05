@@ -1,0 +1,6 @@
+*.pyc
+*.sqlite3
+*.pyo
+__pycache__/
+.vscode/
+*.DS_Store
