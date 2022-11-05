@@ -3,6 +3,7 @@ import googlemaps
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import CASCADE
 from django.utils.safestring import mark_safe
+import os
 
 # Create your models here.
 
@@ -24,10 +25,18 @@ class Studio(models.Model):
     
     def save(self, *args, **kwargs):
         if not (self.longitude and self.latitude):
-            gmaps = googlemaps.Client(key='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU')
-            temp=gmaps.geocode(self.address)[0].get("geometry").get("location")
-            self.latitude, self.longitude=temp.get("lat"), temp.get("lng")
+            try:
+                gmaps = googlemaps.Client(key='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU')
+                temp=gmaps.geocode(self.address)[0].get("geometry").get("location")
+                self.latitude, self.longitude=temp.get("lat"), temp.get("lng")
+            except:
+                pass
             super(Studio, self).save(*args, **kwargs)
+            
+    def delete(self, *args, **kwargs):
+        for i in self.images.all(): # to delete the actual file, because cascade is for database entries
+            i.delete()
+        super(Studio, self).delete(*args, **kwargs)
     
     @property
     def location(self):
@@ -41,8 +50,23 @@ class StudioImage(models.Model):
     studio = models.ForeignKey(to=Studio, on_delete=CASCADE, related_name="images")
     image = models.ImageField(upload_to = 'studio-images/')
     
+    def save(self, *args, **kwargs):
+        to_delete_path=None
+        try:
+            this = StudioImage.objects.get(id=self.id)
+            if this.image != self.image:
+                to_delete_path=this.image.path
+        except: 
+            pass
+        super(StudioImage, self).save(*args, **kwargs)
+        if to_delete_path:
+            os.remove(to_delete_path)
+    
     def delete(self, *args, **kwargs):
-        self.image.delete()
+        try:
+            self.image.delete(save=False)
+        except:
+            pass
         super(StudioImage, self).delete(*args, **kwargs)
         
     @property
@@ -67,3 +91,5 @@ class StudioAmenity(models.Model):
 
 class Class(models.Model):
     pass
+
+
