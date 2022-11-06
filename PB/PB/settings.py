@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'subscriptions',
     'phonenumber_field',
     'rest_framework',
+    'sorl.thumbnail'
 ]
 
 MIDDLEWARE = [

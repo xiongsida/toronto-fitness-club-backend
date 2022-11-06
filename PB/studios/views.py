@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, UpdateAPIView
 from django.shortcuts import get_object_or_404
 from studios.serializers import StudioSerializer
-from studios.models import Studio
+from studios.models.studio import Studio
 from studios.pagination import CustomPagination
 
 # Create your views here.
