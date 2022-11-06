@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 import os
 
 # Create your models here.
+gmaps = googlemaps.Client(key='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU')
 
 class Amenity(models.Model):
     type = models.CharField(max_length=256)
@@ -24,14 +25,12 @@ class Studio(models.Model):
     amenities = models.ManyToManyField(Amenity, through='StudioAmenity')
     
     def save(self, *args, **kwargs):
-        if not (self.longitude and self.latitude):
-            try:
-                gmaps = googlemaps.Client(key='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU')
-                temp=gmaps.geocode(self.address)[0].get("geometry").get("location")
-                self.latitude, self.longitude=temp.get("lat"), temp.get("lng")
-            except:
-                pass
-            super(Studio, self).save(*args, **kwargs)
+        try:
+            temp=gmaps.geocode(self.address)[0].get("geometry").get("location")
+            self.latitude, self.longitude=temp.get("lat"), temp.get("lng")
+        except:
+            pass
+        super(Studio, self).save(*args, **kwargs)
             
     def delete(self, *args, **kwargs):
         for i in self.images.all(): # to delete the actual file, because cascade is for database entries
@@ -40,7 +39,7 @@ class Studio(models.Model):
     
     @property
     def location(self):
-        return (self.longitude, self.latitude)
+        return {"latitude":self.latitude, "logitude":self.longitude}
 
     def __str__(self):
         return self.name
@@ -55,7 +54,7 @@ class StudioImage(models.Model):
         try:
             this = StudioImage.objects.get(id=self.id)
             if this.image != self.image:
-                to_delete_path=this.image.path
+                to_delete_path=this.image.path # update the image, need delete old one
         except: 
             pass
         super(StudioImage, self).save(*args, **kwargs)
@@ -72,7 +71,7 @@ class StudioImage(models.Model):
     @property
     def thumbnail(self):    
         if self.image:
-            print(self.image.url)
+            # print(self.image.url)
             return mark_safe("<img src={} \
                 style='width:{}px; height:{}px' />".format(self.image.url,min(100,0.5*self.image.width),min(100,0.5*self.image.height)))
         
