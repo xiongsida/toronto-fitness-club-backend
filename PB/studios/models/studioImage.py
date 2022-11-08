@@ -4,10 +4,11 @@ from sorl.thumbnail import get_thumbnail
 from django.db.models import CASCADE
 from django.utils.safestring import mark_safe
 from studios.models.studio import Studio
+from django.conf import settings
 
 class StudioImage(models.Model):
     studio = models.ForeignKey(to=Studio, on_delete=CASCADE, related_name="images")
-    image = models.ImageField(upload_to = 'studio-images/')
+    image = models.ImageField(upload_to = settings.STUDIO_IMAGE_RELATIVE_PATH)
     
     def save(self, *args, **kwargs):
         try:
