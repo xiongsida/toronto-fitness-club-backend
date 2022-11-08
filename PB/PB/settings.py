@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
+STUDIO_IMAGE_RELATIVE_PATH = 'studio-images/'
+THUMBNAIL_PATH = 'media/cache/'
 
 # Application definition
 
@@ -136,3 +138,4 @@ REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
     ), 
 }
+GOOGLE_CLIENT_KEY='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU'
