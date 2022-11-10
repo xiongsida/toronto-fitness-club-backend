@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, UpdateAPIView
 from django.shortcuts import get_object_or_404
-from studios.serializers import StudioSerializer
+from studios.serializers import StudioSerializer, StudioDetailSerializer
 from studios.models.studio import Studio
 from studios.pagination import CustomPagination
 from django.db.models import F
@@ -16,8 +16,9 @@ class StudiosListView(ListAPIView):
 
     def get_queryset(self):
         queryset = Studio.objects.all().order_by("id")
-        if 'user_lat' and 'user_long' in self.request.query_params:
-            origins=[self.request.query_params['user_lat'] + " " + self.request.query_params['user_long']]
+        
+        if 'user_lat' and 'user_lng' in self.request.query_params:
+            origins=[self.request.query_params['user_lat'] + " " + self.request.query_params['user_lng']]
             destinations=["{} {}".format(x.latitude,x.longitude) for x in queryset]
             responses=gmaps.distance_matrix(origins, destinations)
             if responses['status']!='OK':
@@ -31,13 +32,18 @@ class StudiosListView(ListAPIView):
     
     
 class StudioDetailView(RetrieveAPIView):
-    serializer_class = StudioSerializer
+    serializer_class = StudioDetailSerializer
 
-    def get_object(self):
-        
-        # loc=self.request.query_params.get("loc",None)
-        
+    def get_object(self):        
         return get_object_or_404(Studio, id=self.kwargs['studio_id'])
 
-# class StudioDerectionView(APIView):
+class StudioDirectionView(APIView):
+    def get(self, request, *args, **kwargs):
+        dest_loc=get_object_or_404(Studio, id=self.kwargs['studio_id'])
+        if 'user_lat' and 'user_lng' in request.query_params:
+            destination='{} {}'.format(dest_loc.latitude,dest_loc.longitude)
+            origin='{} {}'.format(request.query_params['user_lat'],request.query_params['user_lng'])
+            response=gmaps.directions(origin, destination)
+            return Response(response)
+        return Response({'detail':'user location required'})
     
