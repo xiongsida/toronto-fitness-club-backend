@@ -3,6 +3,7 @@ import shutil
 from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail import delete as sorl_delete
 from django.conf import settings
+import datetime
 
 gmaps = googlemaps.Client(key=settings.GOOGLE_CLIENT_KEY)
 
@@ -13,3 +14,12 @@ def delete_file_thumbnail(obj):
     shutil.rmtree(folder_to_delete) # delete thumbnail folder
     return
 
+
+def generate_weekdays(start,end,pattern):
+    ans=[]
+    initial_offset=(pattern-start.isoweekday()+7)%7
+    cur_date=start+datetime.timedelta(days=initial_offset)
+    while cur_date <= end:
+        ans.append(cur_date)
+        cur_date+=datetime.timedelta(days=7)
+    return ans
