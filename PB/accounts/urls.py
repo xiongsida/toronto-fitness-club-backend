@@ -6,6 +6,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('users/', views.UserList.as_view(), name='user_list'),
     path('users/<int:pk>/', views.UserDetail.as_view(), name='user_detail'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

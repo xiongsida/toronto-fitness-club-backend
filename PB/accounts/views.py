@@ -3,10 +3,6 @@ from accounts.serializers import TFCUserSerializer
 from rest_framework import generics, permissions, mixins
 from accounts.permissions import IsSelfOrReadOnly
 
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
 
 class UserList(mixins.ListModelMixin,
                mixins.CreateModelMixin,
@@ -31,9 +27,7 @@ class UserDetail(mixins.RetrieveModelMixin,
                  mixins.UpdateModelMixin,
                  mixins.DestroyModelMixin,
                  generics.GenericAPIView):
-    """
-    A viewset for viewing and editing user instances.
-    """
+
     serializer_class = TFCUserSerializer
     queryset = TFCUser.objects.all()
     permission_classes = [
