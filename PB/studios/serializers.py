@@ -5,6 +5,9 @@ from studios.models.studioImage import StudioImage
 from studios.models.studioAmenity import StudioAmenity
 from studios.models.amenity import Amenity
 
+from studios.models.classInstance import ClassInstance
+from studios.models.classParent import ClassParent
+
 class StudioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Studio
@@ -33,3 +36,14 @@ class StudioDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model=Studio
         fields = ['id', 'name', 'address', 'location', 'postal_code', 'phone_number','images','amenities']
+        
+class ClassParentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassParent
+        fields=['name']
+
+class StudioClassesSerializer(serializers.ModelSerializer):
+    class_parent=ClassParentSerializer(many=False)
+    class Meta:
+        model = ClassInstance
+        fields = ['class_parent', 'date', 'start_time', 'end_time','description','coach']
