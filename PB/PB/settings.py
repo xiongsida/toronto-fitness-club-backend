@@ -35,6 +35,10 @@ ALLOWED_HOSTS = []
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
 
+STUDIO_IMAGE_RELATIVE_PATH = 'studio-images/'
+THUMBNAIL_PATH = 'media/cache/'
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,10 +48,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+
     'rest_framework_simplejwt',
     'accounts',
+    'studios',
+    'subscriptions',
     'phonenumber_field',
+    'rest_framework',
+    'sorl.thumbnail'
+
 ]
 
 SIMPLE_JWT = {
@@ -127,7 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Canada/Eastern'
 
 USE_I18N = True
 
@@ -143,3 +152,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication', 
+        'rest_framework.authentication.SessionAuthentication', 
+        'rest_framework.authentication.BasicAuthentication',
+    ), 
+}
+GOOGLE_CLIENT_KEY='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU'
