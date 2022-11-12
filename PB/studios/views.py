@@ -3,11 +3,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, UpdateAPIView
 from django.shortcuts import get_object_or_404
-from studios.serializers import StudioSerializer, StudioDetailSerializer
+from studios.serializers import StudioSerializer, StudioDetailSerializer, StudioClassesSerializer
 from studios.models.studio import Studio
 from studios.pagination import CustomPagination
 from django.db.models import F
 from studios.utils import gmaps
+import datetime
+import bisect
     
 # Create your views here.
 class StudiosListView(ListAPIView):
@@ -47,3 +49,20 @@ class StudioDirectionView(APIView):
             return Response(response)
         return Response({'detail':'user location required'})
     
+class StudioClassesView(ListAPIView):
+    serializer_class = StudioClassesSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        try:
+            classParents=Studio.objects.get(id=self.kwargs['studio_id']).classes.all()
+            queryset=[]
+            for classParent in classParents:
+                for classInstance in classParent.class_instances.all():
+                    if (not classInstance.is_cancelled) \
+                        and datetime.datetime.combine(classInstance.date,classInstance.start_time) >= datetime.datetime.now():
+                        bisect.insort(queryset,classInstance,key=lambda x:(x.date,x.start_time,x.end_time))
+            return queryset
+        except Exception as e:
+            print(e)
+            return []
