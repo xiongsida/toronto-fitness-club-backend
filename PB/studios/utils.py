@@ -23,3 +23,13 @@ def generate_weekdays(start,end,pattern):
         ans.append(cur_date)
         cur_date+=datetime.timedelta(days=7)
     return ans
+
+def flatten_list(alist):
+    ans=[]
+    for a in alist:
+        if type(a) is list or type(a) is tuple:
+            if len(a)>0:
+                ans.extend(flatten_list(a))
+        else:
+            ans.append(a)
+    return ans
