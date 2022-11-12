@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,6 +26,10 @@ SECRET_KEY = 'django-insecure-*82s5+=o@)xh_n!*d*4%%rx_vtq(n7d+nz6h+oh_ml&3+-644*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+APPEND_SLASH = False
+
+AUTH_USER_MODEL = 'accounts.TFCUser'
+
 ALLOWED_HOSTS = []
 
 MEDIA_ROOT = BASE_DIR / "media"
@@ -39,9 +44,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
     'accounts',
     'phonenumber_field',
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=15),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
+}
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
