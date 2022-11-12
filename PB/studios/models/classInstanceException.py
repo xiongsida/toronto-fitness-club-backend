@@ -4,10 +4,11 @@ from django.db.models import CASCADE
 
 class ClassCanellation(models.Model):
     class_parent= models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="cancellations")
-    cancel_date = models.DateField()
-    cancel_for_all_future = models.BooleanField(default=False)
-    def delete(self):
-        self.save()
+    action_date = models.DateField()
+    is_cancelled = models.BooleanField()
+    apply_for_all_future = models.BooleanField(default=False)
+    # def delete(self):
+    #     self.save()
         
 class ClassEdition(models.Model):
     class_parent= models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="edtions")
@@ -21,5 +22,5 @@ class ClassEdition(models.Model):
     recurrence_pattern = models.IntegerField(choices=ClassParent.RECURRENCE_WAY,blank=True,null=True) # weekly recurrence
     recur_end_date = models.DateField(null=True,blank=True)
     edit_for_all_future = models.BooleanField(default=False)
-    def delete(self):
-        self.save()
+    # def delete(self):
+    #     self.save()
