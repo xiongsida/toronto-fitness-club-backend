@@ -4,6 +4,7 @@ from sorl.thumbnail import get_thumbnail
 from sorl.thumbnail import delete as sorl_delete
 from django.conf import settings
 import datetime
+from django.db.models.functions import *
 
 gmaps = googlemaps.Client(key=settings.GOOGLE_CLIENT_KEY)
 
@@ -33,3 +34,19 @@ def flatten_list(alist):
         else:
             ans.append(a)
     return ans
+
+
+def get_distance(origin, destination):
+    # find math solution online  # Haversine distance.
+    # https://stackoverflow.com/questions/19412462/getting-distance-between-two-points-based-on-latitude-longitude
+    # but I change math function to django function tools to serve model F function on database
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371  # km
+    dlat = Radians(lat2 - lat1)
+    dlon = Radians(lon2 - lon1)
+    a = (Sin(dlat/2) * Sin(dlat/2) +Cos(Radians(lat1)) * Cos(Radians(lat2)) *
+         Sin(dlon / 2) * Sin(dlon / 2))
+    c = 2 * ATan2 (Sqrt(a), Sqrt(1 - a))
+    d = radius * c
+    return d

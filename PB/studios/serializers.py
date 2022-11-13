@@ -7,11 +7,7 @@ from studios.models.amenity import Amenity
 
 from studios.models.classInstance import ClassInstance
 from studios.models.classParent import ClassParent
-
-class StudioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Studio
-        fields = ['id', 'name', 'address', 'location', 'postal_code', 'phone_number']
+from django.urls import reverse
         
 class StudioImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,10 +28,13 @@ class StudioAmenitySerializer(serializers.ModelSerializer):
 class StudioDetailSerializer(serializers.ModelSerializer):
     images=StudioImageSerializer(many=True,read_only=True)
     amenities=StudioAmenitySerializer(source='studioamenity_set',many=True,read_only=True)
-    
+    classes=serializers.SerializerMethodField(source="get_classes")
+    def get_classes(self, obj):
+        return self.context['request'].build_absolute_uri(reverse("studios:classes", kwargs={'studio_id': obj.id}))
     class Meta:
         model=Studio
-        fields = ['id', 'name', 'address', 'location', 'postal_code', 'phone_number','images','amenities']
+        fields = ['id', 'name', 'address', 'location', 'postal_code', 'phone_number','images','classes','amenities','direction']
+        
         
 class ClassParentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +46,12 @@ class StudioClassesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassInstance
         fields = ['class_parent', 'date', 'start_time', 'end_time','description','coach']
+        
+        
+class StudioSerializer(serializers.HyperlinkedModelSerializer):
+    details = serializers.SerializerMethodField(source="get_details")
+    def get_details(self, obj):
+        return self.context['request'].build_absolute_uri(reverse("studios:details", kwargs={'studio_id': obj.id}))
+    class Meta:
+        model = Studio
+        fields = ['id', 'name', 'address', 'location', 'postal_code', 'phone_number',"details"]

@@ -17,7 +17,7 @@ class StudioImageTabularInline(admin.TabularInline):
     model = StudioImage
     list_display= ['image','thumbnail']
     readonly_fields = ['thumbnail']
-    
+    extra=2
     # def formfield_for_dbfield(self, db_field, **kwargs):
     #     if db_field.name == 'image':
     #         kwargs['widget'] = forms.FileInput(attrs={'onchange': 'alert(0)'})
@@ -25,12 +25,12 @@ class StudioImageTabularInline(admin.TabularInline):
     
 class StudioAmenityTabularInline(admin.TabularInline):
     model=StudioAmenity
-    
+    extra=2
     
 class StudioAdmin(admin.ModelAdmin):
     inlines = [StudioImageTabularInline, StudioAmenityTabularInline]
     model = Studio
-    readonly_fields = ['latitude','longitude']
+    readonly_fields = ['latitude','longitude','place_id']
     
     
 class ClassKeywordTabularInline(admin.TabularInline):
@@ -42,9 +42,13 @@ class ClassEditionStackedInline(admin.StackedInline):
     fields= [('previous_date','new_date'),'description',('start_time','end_time'),('recurrence_pattern','recur_end_date'),('coach','capacity'),'edit_for_all_future']
     extra=1
     def has_change_permission(self, request, obj=None):
-        return False
+        return False # this is the case when changing the classEdition, readonly
     def has_delete_permission(self, request, obj=None):
         return False
+    def get_readonly_fields(self, request, obj=None):
+        if not obj: #This is the case when creating the parent class, readonly
+            return flatten_list(self.fields)
+        return []
 
 class ClassCanellationTabularInline(admin.TabularInline):
     model=ClassCanellation
@@ -57,12 +61,10 @@ class ClassCanellationTabularInline(admin.TabularInline):
         return True
     def has_delete_permission(self, request, obj=None):
         return False
-    # def save_new_objects(self, commit=True):
-    #     saved_instances = super(BookInlineFormSet, self).save_new_objects(commit)
-    #     if commit:
-    #         # create book for press
-    #     return saved_instances
-    
+    def get_readonly_fields(self, request, obj=None):
+        if not obj: #This is the case when creating the parent class
+            return flatten_list(self.fields)
+        return []
 
 
 class ClassParentAdmin(admin.ModelAdmin):
@@ -72,6 +74,7 @@ class ClassParentAdmin(admin.ModelAdmin):
     
     def get_readonly_fields(self, request, obj=None):
         if obj: #This is the case when obj is already created i.e. it's an edit
+            # instead of editing original classparent to edit, we add a edition model, so all readonly
             return flatten_list(self.fields)
         return []
         
@@ -145,7 +148,6 @@ class ClassParentAdmin(admin.ModelAdmin):
 #             all_futures=class_parent.class_instances.all().filter(date__gte=previous_date)
         
 def cancel_instances(class_parent,data_list):
-    print("-----len of new cancellations-----",len(data_list))
     for data in data_list:
         action_date=data.get('action_date',None)
         is_cancelled=data.get('is_cancelled',None)
@@ -167,8 +169,6 @@ def cancel_instances(class_parent,data_list):
                 print("the action date is not existing in future classes")
                 pass
             
-    
-    
 
 
 
