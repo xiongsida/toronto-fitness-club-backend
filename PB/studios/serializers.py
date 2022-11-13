@@ -41,11 +41,11 @@ class ClassParentSerializer(serializers.ModelSerializer):
         model = ClassParent
         fields=['name']
 
-class StudioClassesSerializer(serializers.ModelSerializer):
+class ClassInstanceSerializer(serializers.ModelSerializer):
     class_parent=ClassParentSerializer(many=False)
     class Meta:
         model = ClassInstance
-        fields = ['id', 'class_parent', 'date', 'start_time', 'end_time','description','coach']
+        fields = ['id', 'class_parent', 'date', 'start_time', 'end_time','description','coach','is_cancelled']
         
         
 class StudioSerializer(serializers.HyperlinkedModelSerializer):

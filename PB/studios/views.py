@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from django.shortcuts import get_object_or_404
-from studios.serializers import StudioSerializer, StudioDetailSerializer, StudioClassesSerializer
+from studios.serializers import StudioSerializer, StudioDetailSerializer, ClassInstanceSerializer
 from studios.models.studio import Studio
 from studios.models.classInstance import ClassInstance
 from studios.models.classParent import ClassParent
@@ -40,7 +40,7 @@ class StudioDetailView(RetrieveAPIView):
 
     
 class StudioClassesView(ListAPIView):
-    serializer_class = StudioClassesSerializer
+    serializer_class = ClassInstanceSerializer
     pagination_class = CustomPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ['coach','class_parent__name','date']
@@ -126,3 +126,26 @@ class ClassDropView(APIView):
                 
         return Response({'detail':'drop success, or you do not have specified classes to drop at the first place'})
         
+
+class UserClassScheduleView(ListAPIView):
+    serializer_class = ClassInstanceSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        student=get_object_or_404(TFCUser, id=self.kwargs['user_id'])
+        # print(student)
+        q=Q(date__gt=datetime.date.today()) | (Q(date=datetime.date.today())&Q(start_time__gte=datetime.datetime.now().time()))
+        queryset=student.class_instances.filter(q).order_by('date','start_time','end_time')
+        return queryset
+
+
+class UserClasseHistoryView(ListAPIView):
+    serializer_class = ClassInstanceSerializer
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        student=get_object_or_404(TFCUser, id=self.kwargs['user_id'])
+        q=Q(date__lt=datetime.date.today()) | (Q(date=datetime.date.today())&Q(start_time__lte=datetime.datetime.now().time()))
+        queryset=student.class_instances.filter(q).order_by('date','start_time','end_time')
+        return queryset
+    
