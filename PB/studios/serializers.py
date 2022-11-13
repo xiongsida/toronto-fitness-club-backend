@@ -45,7 +45,7 @@ class StudioClassesSerializer(serializers.ModelSerializer):
     class_parent=ClassParentSerializer(many=False)
     class Meta:
         model = ClassInstance
-        fields = ['class_parent', 'date', 'start_time', 'end_time','description','coach']
+        fields = ['id', 'class_parent', 'date', 'start_time', 'end_time','description','coach']
         
         
 class StudioSerializer(serializers.HyperlinkedModelSerializer):

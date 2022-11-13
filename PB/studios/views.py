@@ -2,16 +2,17 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import filters
-from rest_framework.generics import RetrieveAPIView, ListAPIView, CreateAPIView, UpdateAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView
 from django.shortcuts import get_object_or_404
 from studios.serializers import StudioSerializer, StudioDetailSerializer, StudioClassesSerializer
 from studios.models.studio import Studio
 from studios.models.classInstance import ClassInstance
+from studios.models.classParent import ClassParent
+from accounts.models import TFCUser
 from studios.pagination import CustomPagination
 from django.db.models import F, Q
 from studios.utils import gmaps, get_distance
 import datetime
-import bisect
 # from django.db.models.functions import datetime
     
 # Create your views here.
@@ -52,10 +53,76 @@ class StudioClassesView(ListAPIView):
         q2=Q(is_cancelled=False)
         q3=Q(date__gt=datetime.date.today()) | (Q(date=datetime.date.today())&Q(start_time__gte=datetime.datetime.now().time()))
         queryset=ClassInstance.objects.filter(q1 & q2 & q3).order_by('date','start_time','end_time')
-        # for classParent in classParents:
-        #     for classInstance in classParent.class_instances.all():
-        #         if (not classInstance.is_cancelled) \
-        #             and datetime.datetime.combine(classInstance.date,classInstance.start_time) >= datetime.datetime.now():
-        #             bisect.insort(queryset,classInstance,key=lambda x:(x.date,x.start_time,x.end_time))
+
         return queryset
 
+
+class ClassEnrollView(APIView):
+    
+    def get(self,request, *args, **kwargs):
+        if not request.user:
+            return Response({'detail':'user not logged in'})
+        student=request.user
+        # print(student)
+        apply_for_future=request.query_params.get('for_future','0')
+        studio_id=kwargs.get('studio_id',None)
+        class_instance_id=kwargs.get('class_instance_id',None)
+        studio=get_object_or_404(Studio, id=studio_id)
+        classinstance=get_object_or_404(ClassInstance,id=class_instance_id)
+        class_parent_id=classinstance.class_parent.id
+        classparent=get_object_or_404(ClassParent,id=class_parent_id)
+        
+        if classparent.studio.id!=studio.id:
+            return Response({'detail':'enroll failed, class and studio is not matched'})
+        
+        if datetime.datetime.combine(classinstance.date,classinstance.start_time)<=datetime.datetime.now():
+            return Response({'detail':'enroll failed, the class you selected was in the past'})
+        
+        if classinstance.capacity>len(classinstance.students.all()):
+            student.class_instances.add(classinstance)
+        else:
+            return Response({'detail':'enroll failed, this class is full'})
+        
+        full_classes=[]
+        if apply_for_future=='1':
+            student.class_parents.add(classparent)
+            future_instances=ClassInstance.objects.filter(Q(class_parent__id=class_parent_id) & Q(date__gt=classinstance.date))
+            for future_instance in future_instances:
+                if future_instance.capacity>len(future_instance.students.all()):
+                    student.class_instances.add(future_instance)
+                else:
+                    full_classes.append(future_instance.id)
+                
+        return Response({'detail':'enroll success'}) if not full_classes else Response({'detail':'enroll success partially','already full before':full_classes})
+
+class ClassDropView(APIView):
+    
+    def get(self,request, *args, **kwargs):
+        if not request.user:
+            return Response({'detail':'user not logged in'})
+        student=request.user
+        apply_for_future=request.query_params.get('for_future','0')
+        studio_id=kwargs.get('studio_id',None)
+        class_instance_id=kwargs.get('class_instance_id',None)
+        
+        studio=get_object_or_404(Studio, id=studio_id)
+        classinstance=get_object_or_404(ClassInstance,id=class_instance_id)
+        class_parent_id=classinstance.class_parent.id
+        classparent=get_object_or_404(ClassParent,id=class_parent_id)
+        
+        if classparent.studio.id!=studio.id:
+            return Response({'detail':'drop failed, class and studio is not matched'})
+        
+        if datetime.datetime.combine(classinstance.date,classinstance.start_time)<=datetime.datetime.now():
+            return Response({'detail':'drop not allowed, the class you selected was in the past'})
+        
+        student.class_instances.remove(classinstance)
+        
+        if apply_for_future=='1':
+            student.class_parents.remove(classparent)
+            future_instances=ClassInstance.objects.filter(Q(class_parent__id=class_parent_id) & Q(date__gt=classinstance.date))
+            for future_instance in future_instances:
+                student.class_instances.remove(future_instance)
+                
+        return Response({'detail':'drop success, or you do not have specified classes to drop at the first place'})
+        

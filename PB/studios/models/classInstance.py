@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import CASCADE
 from studios.models.classParent import ClassParent
+from accounts.models import TFCUser
 import datetime
 
 class ClassInstance(models.Model):
@@ -13,9 +14,7 @@ class ClassInstance(models.Model):
     capacity = models.PositiveIntegerField(null=False, blank=False)
     is_cancelled = models.BooleanField()
     
-    @property
-    def begin_datetime(self):
-        return datetime.datetime.combine(self.date,self.start_time)
+    students = models.ManyToManyField(TFCUser,related_name='class_instances') # this is acutally used for enrollment
     
     def __str__(self):
         return self.class_parent.name+self.date.strftime('%Y-%m-%d')
