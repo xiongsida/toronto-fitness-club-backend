@@ -6,5 +6,5 @@ def start():
     scheduler = BackgroundScheduler()
     scheduler.add_job(business_logic.remove_all_expired_subscriptions,
                       'interval',
-                      seconds=5)
+                      seconds=60 * 60)
     scheduler.start()
