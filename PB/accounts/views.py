@@ -10,11 +10,11 @@ class UserList(mixins.ListModelMixin,
     queryset = TFCUser.objects.all()
     serializer_class = TFCUserSerializer
 
-    def get_permissions(self, *args, **kwargs):
-        if self.request.method == 'POST':
-            return []
-        else:
-            return [permissions.IsAuthenticated()]
+    # def get_permissions(self, *args, **kwargs):
+    #     if self.request.method == 'POST':
+    #         return []
+    #     else:
+    #         return [permissions.IsAuthenticated()]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

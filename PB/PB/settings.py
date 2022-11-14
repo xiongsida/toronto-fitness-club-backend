@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'studios',
     'subscriptions',
     'phonenumber_field',
+    'creditcards',
     'rest_framework',
     'sorl.thumbnail'
 
@@ -136,8 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Canada/Eastern'
-
 USE_I18N = True
 
 USE_TZ = True
@@ -153,10 +152,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-REST_FRAMEWORK = { 'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication', 
-        'rest_framework.authentication.SessionAuthentication', 
-        'rest_framework.authentication.BasicAuthentication',
-    ), 
+REST_FRAMEWORK = {'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+),
 }
-GOOGLE_CLIENT_KEY='AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU'
+GOOGLE_CLIENT_KEY = 'AIzaSyAz2VJWVsBKb65KyxVWm1exv2-dubWdFdU'
