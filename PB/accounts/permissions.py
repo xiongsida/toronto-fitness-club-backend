@@ -29,9 +29,8 @@ class IsSelfOrReadOnly(permissions.BasePermission):
         return obj == request.user
 
 
-# class hasPlan(permissions.BasePermission):
-#     def has_permission(self, request, view):
-#         if request.user != None and hasattr(request.user, 'subscription'):
-#             return has_plan(request.user, request.user.subscription)
-#         else:
-#             return False
+class isSubscribed(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user != None and
+                    hasattr(request.user, 'subscription') and
+                    request.user.subscription != None)
