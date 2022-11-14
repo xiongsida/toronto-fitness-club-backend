@@ -31,12 +31,13 @@ class PaymentMethodSerializer(serializers.HyperlinkedModelSerializer):
 class SubscriptionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Subscription
-        read_only_fields = ['user']
+        read_only_fields = ['user', 'expired_time']
         fields = [
             'url',
             'user',
             'plan',
             'subscribed_time',
+            'expired_time',
         ]
 
 
@@ -48,7 +49,6 @@ class UpComingPlanSerializer(serializers.HyperlinkedModelSerializer):
             'url',
             'user',
             'plan',
-            'start_time',
         ]
 
 

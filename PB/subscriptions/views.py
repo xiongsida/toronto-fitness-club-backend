@@ -46,9 +46,9 @@ class SubList(mixins.CreateModelMixin,
             return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        make_subscription(self.request.user,
-                          serializer.validated_data.get('plan'))
-        return serializer.save(user=self.request.user)
+        new_plan = serializer.validated_data.get('plan')
+        make_subscription(self.request.user, new_plan)
+        return serializer.save(user=self.request.user, expired_time=utc2dbtime(get_now2utc() + new_plan.interval))
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -174,6 +174,9 @@ class UpComingPlanList(mixins.CreateModelMixin,
         if user_has_x(request.user, 'upcoming_plan'):
             raise exceptions.PermissionDenied(
                 detail='You already has upcoming plan, please cancel previous one before adding new.')
+        elif not user_has_x(request.user, 'subscription'):
+            raise exceptions.PermissionDenied(
+                detail='You should have an active plan before setting upcoming plan.')
         else:
             return super().create(request, *args, **kwargs)
 

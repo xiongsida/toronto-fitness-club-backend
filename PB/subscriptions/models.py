@@ -55,6 +55,10 @@ class Subscription(models.Model):
         null=True,
         auto_now=True
     )
+    expired_time = models.DateTimeField(
+        blank=False,
+        null=False,
+    )
 
 
 class UpComingPlan(models.Model):
@@ -70,7 +74,6 @@ class UpComingPlan(models.Model):
         on_delete=models.PROTECT,
         related_name='users_upcoming_plan',
     )
-    start_time = models.DateTimeField()
 
 
 class Receipt(models.Model):
