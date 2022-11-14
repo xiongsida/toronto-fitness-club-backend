@@ -67,17 +67,6 @@ class SubDetail(mixins.RetrieveModelMixin,
         IsTheUser,
     ]
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     rtn = super().retrieve(request, *args, **kwargs)
-    #     a = request.user.subscription.subscribed_time.replace(
-    #         tzinfo=timezone.ets).replace(tzinfo=None)
-    #     print(type(a))
-    #     import pytz
-    #     b = datetime.datetime.now()
-    #     print(a, b)
-    #     print(a - b, b - a)
-    #     return rtn
-
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
