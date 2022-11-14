@@ -56,8 +56,8 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'creditcards',
     'rest_framework',
-    'sorl.thumbnail'
-
+    'sorl.thumbnail',
+    'drf_yasg',
 ]
 
 SIMPLE_JWT = {
