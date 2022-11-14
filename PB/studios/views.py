@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import filters
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from django.shortcuts import get_object_or_404
 from studios.serializers import StudioSerializer, StudioDetailSerializer, ClassInstanceSerializer
@@ -10,16 +11,17 @@ from studios.models.classInstance import ClassInstance
 from studios.models.classParent import ClassParent
 from accounts.models import TFCUser
 from studios.pagination import CustomPagination
+from studios.fielter import ClassInstanceFilter
 from django.db.models import F, Q
-from studios.utils import gmaps, get_distance
+from studios.utils import get_distance
 import datetime
-# from django.db.models.functions import datetime
     
 # Create your views here.
 class StudiosListView(ListAPIView):
     serializer_class = StudioSerializer
     pagination_class = CustomPagination
-    filter_backends = [filters.SearchFilter] # works on queryset
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['name','amenities__type','classes__name','classes__coach']
     search_fields = ['name','amenities__type','classes__name','classes__coach']
 
     def get_queryset(self):
@@ -42,8 +44,10 @@ class StudioDetailView(RetrieveAPIView):
 class StudioClassesView(ListAPIView):
     serializer_class = ClassInstanceSerializer
     pagination_class = CustomPagination
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['coach','class_parent__name','date']
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    # filterset_fields = ['class_parent__name','coach','date']
+    filterset_class = ClassInstanceFilter
+    search_fields = ['class_parent__name','coach','date','start_time','end_time']
 
     def get_queryset(self):
         studio=get_object_or_404(Studio, id=self.kwargs['studio_id'])
@@ -58,7 +62,7 @@ class StudioClassesView(ListAPIView):
 
 
 class ClassEnrollView(APIView):
-    
+    #should check cancel
     def get(self,request, *args, **kwargs):
         if not request.user:
             return Response({'detail':'user not logged in'})
@@ -83,17 +87,22 @@ class ClassEnrollView(APIView):
         else:
             return Response({'detail':'enroll failed, this class is full'})
         
-        full_classes=[]
+        if classinstance.is_cancelled==False:
+            student.class_instances.add(classinstance)
+        else:
+            return Response({'detail':'enroll failed, this class is cancelled'})
+        
+        invalid_classes=[]
         if apply_for_future=='1':
             student.class_parents.add(classparent)
             future_instances=ClassInstance.objects.filter(Q(class_parent__id=class_parent_id) & Q(date__gt=classinstance.date))
             for future_instance in future_instances:
-                if future_instance.capacity>len(future_instance.students.all()):
+                if future_instance.capacity>len(future_instance.students.all()) and (not future_instance.is_cancelled):
                     student.class_instances.add(future_instance)
                 else:
-                    full_classes.append(future_instance.id)
+                    invalid_classes.append(future_instance.id)
                 
-        return Response({'detail':'enroll success'}) if not full_classes else Response({'detail':'enroll success partially','already full before':full_classes})
+        return Response({'detail':'enroll success'}) if not invalid_classes else Response({'detail':'enroll success partially','already full or cancelled before':invalid_classes})
 
 class ClassDropView(APIView):
     
@@ -134,8 +143,9 @@ class UserClassScheduleView(ListAPIView):
     def get_queryset(self):
         student=get_object_or_404(TFCUser, id=self.kwargs['user_id'])
         # print(student)
-        q=Q(date__gt=datetime.date.today()) | (Q(date=datetime.date.today())&Q(start_time__gte=datetime.datetime.now().time()))
-        queryset=student.class_instances.filter(q).order_by('date','start_time','end_time')
+        q1=Q(is_cancelled=False)
+        q2=Q(date__gt=datetime.date.today()) | (Q(date=datetime.date.today())&Q(start_time__gte=datetime.datetime.now().time()))
+        queryset=student.class_instances.filter(q1 & q2).order_by('date','start_time','end_time')
         return queryset
 
 
