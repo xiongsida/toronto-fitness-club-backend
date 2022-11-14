@@ -1,6 +1,5 @@
 
 from .models import *
-import datetime
 from .utils import *
 
 
@@ -20,7 +19,6 @@ def make_subscription(user, plan: Plan):
         UpComingPlan(
             user=user,
             plan=plan,
-            start_time=datetime.datetime.now() + plan.interval
         ).save()
 
     # make charge receipt
@@ -33,8 +31,10 @@ def make_subscription(user, plan: Plan):
 
 
 def cancel_subscription(user):
-    ratio = 1 - (datetime.datetime.utcnow() -
-                 user.subscription.subscribed_time.replace(tzinfo=None)) / user.subscription.plan.interval
+    ratio = (dbtime2utc(user.subscription.expired_time) -
+             get_now2utc()) / \
+        (dbtime2utc(user.subscription.expired_time) -
+         dbtime2utc(user.subscription.subscribed_time))
     refund = user.subscription.plan.price * ratio
 
     # make refund receipt
@@ -52,3 +52,29 @@ def cancel_subscription(user):
 
     # refund the fee
     print(f'refund {user} ${refund}')
+
+
+def remove_expired_subscription(sub):
+    print(f'remove expired subscription of {sub.user}')
+    user = sub.user
+    if user_has_x(user, 'upcoming_plan') and user_has_x(user, 'payment_method') and user.upcoming_plan.plan.is_active:
+        new_plan = user.upcoming_plan.plan
+        sub.delete()
+        make_subscription(user, new_plan)
+        Subscription(
+            plan=new_plan,
+            user=user,
+            expired_time=utc2dbtime(get_now2utc() + new_plan.interval)
+        ).save()
+    else:
+        sub.delete()
+        if user_has_x(user, 'upcoming_plan'):
+            user.upcoming_plan.delete()
+
+
+def remove_all_expired_subscriptions():
+    print('check expired subscriptions')
+    subs = Subscription.objects.all()
+    for sub in subs:
+        if get_now2utc() > dbtime2utc(sub.subscribed_time) + sub.plan.interval:
+            remove_expired_subscription(sub)
