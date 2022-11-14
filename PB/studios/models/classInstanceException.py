@@ -12,7 +12,7 @@ class ClassCanellation(models.Model):
         
 class ClassEdition(models.Model):
     class_parent= models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="edtions")
-    previous_date = models.DateField()
+    original_date = models.DateField(blank=True,null=True)
     description = models.CharField(max_length=512, null=True, blank=True)
     new_date = models.DateField(null=True,blank=True)
     start_time = models.TimeField(null=True,blank=True)
@@ -23,4 +23,4 @@ class ClassEdition(models.Model):
     recur_end_date = models.DateField(null=True,blank=True)
     edit_for_all_future = models.BooleanField(default=False)
     # def delete(self):
-    #     self.save()
+        # self.save()

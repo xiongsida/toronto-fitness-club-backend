@@ -1,10 +1,9 @@
 from django.contrib import admin
-from django import forms
+from studios.adminforms import ClassEditForm, ClassCancelForm
 from studios.models.studio import Studio
 from studios.models.studioImage import StudioImage
 from studios.models.amenity import Amenity
 from studios.models.studioAmenity import StudioAmenity
-
 from studios.models.classParent import ClassParent
 from studios.models.classInstance import ClassInstance
 from studios.models.classKeyword import ClassKeyword
@@ -38,8 +37,9 @@ class ClassKeywordTabularInline(admin.TabularInline):
     extra=1
     
 class ClassEditionStackedInline(admin.StackedInline):
+    form=ClassEditForm
     model=ClassEdition
-    fields= [('previous_date','new_date'),'description',('start_time','end_time'),('recurrence_pattern','recur_end_date'),('coach','capacity'),'edit_for_all_future']
+    fields= [('original_date','new_date'),'description',('start_time','end_time'),('recurrence_pattern','recur_end_date'),('coach','capacity'),'edit_for_all_future']
     extra=1
     def has_change_permission(self, request, obj=None):
         return False # this is the case when changing the classEdition, readonly
@@ -51,6 +51,7 @@ class ClassEditionStackedInline(admin.StackedInline):
         return []
 
 class ClassCanellationTabularInline(admin.TabularInline):
+    form=ClassCancelForm
     model=ClassCanellation
     fields=['action_date','is_cancelled','apply_for_all_future']
     extra=1
@@ -118,7 +119,7 @@ class ClassParentAdmin(admin.ModelAdmin):
 
 # def edit_instances(class_parent,data_list):
 #     for data in data_list:
-#         previous_date = data.get('previous_date',None)
+#         original_date = data.get('original_date',None)
 #         description =data.get('description',None)
 #         new_date = data.get('new_date',None)
 #         start_time = data.get('start_time',None)
@@ -128,14 +129,14 @@ class ClassParentAdmin(admin.ModelAdmin):
 #         recurrence_pattern = data.get('recurrence_pattern',None)
 #         recur_end_date = data.get('recur_end_date',None)
 #         edit_for_all_future = data.get('edit_for_all_future',None)
-#         if not previous_date:
+#         if not original_date:
 #             continue
 #         if new_date: # just modify one
-#             if previous_date<=datetime.date.today():
+#             if original_date<=datetime.date.today():
 #                 print("cannot edit past or today's class")
 #                 continue
 #             print("-----just move old to new, will not modify all futures to one day even though edit_for_all_future is given-----")
-#             instances=class_parent.class_instances.all().filter(date=previous_date)
+#             instances=class_parent.class_instances.all().filter(date=original_date)
 #             for instance in instances:
 #                 instance.date=new_date
 #                 if description: instance.description=description
@@ -145,7 +146,7 @@ class ClassParentAdmin(admin.ModelAdmin):
 #                 if capacity: instance.capacity=capacity
 #                 instance.save()
 #         elif edit_for_all_future:
-#             all_futures=class_parent.class_instances.all().filter(date__gte=previous_date)
+#             all_futures=class_parent.class_instances.all().filter(date__gte=original_date)
         
 def cancel_instances(class_parent,data_list):
     for data in data_list:
@@ -166,7 +167,7 @@ def cancel_instances(class_parent,data_list):
                     instance.is_cancelled=is_cancelled
                     instance.save()
             except:
-                print("the action date is not existing in future classes")
+                print("the action date is not existing in future classes, but should never reach here if not existing because I check in forms")
                 pass
             
 
