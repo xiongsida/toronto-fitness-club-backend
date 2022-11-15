@@ -26,7 +26,7 @@ from django.views.generic import TemplateView
 from .swagger_urls import swagger_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('studios/', include('studios.urls')),
+    path('studios/', include('studios.urls',namespace='studios')),
     path("", include('accounts.urls')),
     path("", include('subscriptions.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

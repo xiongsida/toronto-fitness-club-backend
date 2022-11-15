@@ -2,6 +2,7 @@ from django.db import models
 from studios.utils import gmaps
 from phonenumber_field.modelfields import PhoneNumberField
 from studios.models.amenity import Amenity
+from urllib.parse import urlencode, quote
 
 class Studio(models.Model):
     # name, address, geographical location, postal code, phone number, and a set of images.
@@ -12,10 +13,13 @@ class Studio(models.Model):
     postal_code = models.CharField(max_length=128)
     phone_number = PhoneNumberField()
     amenities = models.ManyToManyField(Amenity, through='StudioAmenity')
+    place_id = models.CharField(blank=True, null=True, max_length=128)
     
     def save(self, *args, **kwargs):
         try:
-            temp=gmaps.geocode(self.address)[0].get("geometry").get("location")
+            res=gmaps.geocode(self.address)[0]
+            self.place_id=res.get("place_id",None)
+            temp=res.get("geometry").get("location")
             self.latitude, self.longitude=temp.get("lat"), temp.get("lng")
         except:
             pass
@@ -28,8 +32,15 @@ class Studio(models.Model):
     
     @property
     def location(self):
+        # return (self.latitude,self.longitude)
         return {"latitude":self.latitude, "logitude":self.longitude}
-
+    
+    @property
+    def direction(self):
+        if self.place_id:
+            return "https://www.google.com/maps/dir/?api=1&destination={}&destination_place_id={}&travelmode=driving".format(quote(self.address),self.place_id)
+        return "https://www.google.com/maps/dir/?api=1&destination={}&travelmode=driving".format(quote(self.address))
+        
     def __str__(self):
         return self.name
     

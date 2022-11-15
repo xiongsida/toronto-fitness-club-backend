@@ -2,6 +2,7 @@ from django.db import models
 import datetime
 from django.db.models import CASCADE
 from studios.models.studio import Studio
+from accounts.models import TFCUser
 from studios.utils import generate_weekdays
 
 
@@ -25,6 +26,8 @@ class ClassParent(models.Model):
     end_time = models.TimeField(null=False,blank=False)
     recurrence_pattern = models.IntegerField(default=1,choices=RECURRENCE_WAY) # weekly recurrence
     recur_end_date = models.DateField(null=False,blank=False) # when recurring class ends, if infinity, end_date could be 9999-12-31
+    
+    students = models.ManyToManyField(TFCUser,related_name='class_parents') # this is only used when previous user wish to enroll to all future, and then admin extend the future classes
     
     def __str__(self):
         return 'studio_'+str(self.studio)+':class_'+self.name
