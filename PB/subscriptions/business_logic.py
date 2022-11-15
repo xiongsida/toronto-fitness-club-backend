@@ -33,7 +33,8 @@ def make_subscription(user, plan: Plan):
 
 
 def cancel_subscription(user):
-    force_drop_classes_once_cancel_subscription(user, datetime.today())
+    force_drop_classes_once_cancel_subscription(
+        user, datetime.today() + datetime.timedelta(day=1))
 
     ratio = (dbtime2utc(user.subscription.expired_time) -
              get_now2utc()) / \
@@ -60,7 +61,6 @@ def cancel_subscription(user):
 
 def remove_expired_subscription(sub):
     print(f'remove expired subscription of {sub.user}')
-    force_drop_classes_once_cancel_subscription(user, datetime.today())
     user = sub.user
     if user_has_x(user, 'upcoming_plan') and user_has_x(user, 'payment_method') and user.upcoming_plan.plan.is_active:
         new_plan = user.upcoming_plan.plan
@@ -72,6 +72,8 @@ def remove_expired_subscription(sub):
             expired_time=utc2dbtime(get_now2utc() + new_plan.interval)
         ).save()
     else:
+        force_drop_classes_once_cancel_subscription(
+            user, datetime.today() + datetime.timedelta(day=1))
         sub.delete()
         if user_has_x(user, 'upcoming_plan'):
             user.upcoming_plan.delete()
