@@ -14,6 +14,8 @@ from studios.pagination import CustomPagination
 from classes.filter import ClassInstanceFilter
 from django.db.models import Q
 import datetime
+from accounts.permissions import isSubscribed
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -23,6 +25,7 @@ class ClassesListView(ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = ClassInstanceFilter
     search_fields = ['class_parent__name','coach','date','start_time','end_time']
+    permission_classes=[IsAuthenticated]
     
     def get_queryset(self):
         studio_id=self.request.GET.get('studio_id',None)
@@ -52,7 +55,7 @@ class ClassesListView(ListAPIView):
 
 
 class ClassEnrollView(APIView):
-
+    permission_classes=[IsAuthenticated,isSubscribed]
     def post(self,request, *args, **kwargs):
         if not request.user:
             return Response({'detail':'user not logged in'})
@@ -89,7 +92,7 @@ class ClassEnrollView(APIView):
         return Response({'detail':'enroll success'}) if not invalid_classes else Response({'detail':'enroll success partially','already full or cancelled before':invalid_classes})
 
 class ClassDropView(APIView):
-    
+    permission_classes=[IsAuthenticated,isSubscribed]
     def post(self,request, *args, **kwargs):
         if not request.user:
             return Response({'detail':'user not logged in'})

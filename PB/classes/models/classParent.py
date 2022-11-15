@@ -21,7 +21,7 @@ class ClassParent(models.Model):
     description = models.CharField(max_length=512, null=False, blank=False)
     coach = models.CharField(max_length=128, null=False, blank=False)
     capacity = models.PositiveIntegerField(null=False, blank=False)
-    created_datetime = models.DateTimeField(auto_now_add=True) # when class was created
+    # created_datetime = models.DateTimeField(auto_now_add=True) # when class was created
     start_time = models.TimeField(null=False,blank=False)  # the specific start time in a day
     end_time = models.TimeField(null=False,blank=False)
     recurrence_pattern = models.IntegerField(default=1,choices=RECURRENCE_WAY) # weekly recurrence
