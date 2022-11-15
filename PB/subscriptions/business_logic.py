@@ -1,6 +1,8 @@
 
 from .models import *
 from .utils import *
+from datetime import datetime
+from studios.utils import force_drop_classes_once_cancel_subscription
 
 
 def is_card_valid(card_number, card_expire, security_code):
@@ -31,6 +33,9 @@ def make_subscription(user, plan: Plan):
 
 
 def cancel_subscription(user):
+    force_drop_classes_once_cancel_subscription(
+        user, datetime.today() + datetime.timedelta(day=1))
+
     ratio = (dbtime2utc(user.subscription.expired_time) -
              get_now2utc()) / \
         (dbtime2utc(user.subscription.expired_time) -
@@ -67,6 +72,8 @@ def remove_expired_subscription(sub):
             expired_time=utc2dbtime(get_now2utc() + new_plan.interval)
         ).save()
     else:
+        force_drop_classes_once_cancel_subscription(
+            user, datetime.today() + datetime.timedelta(day=1))
         sub.delete()
         if user_has_x(user, 'upcoming_plan'):
             user.upcoming_plan.delete()

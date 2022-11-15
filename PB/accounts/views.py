@@ -1,7 +1,7 @@
 from accounts.models import TFCUser
 from accounts.serializers import TFCUserSerializer
 from rest_framework import generics, permissions, mixins
-from accounts.permissions import IsSelfOrReadOnly
+from accounts.permissions import IsSelfOrReadOnly, isDebugingOrSecretForGet
 
 
 class UserList(mixins.ListModelMixin,
@@ -10,11 +10,9 @@ class UserList(mixins.ListModelMixin,
     queryset = TFCUser.objects.all()
     serializer_class = TFCUserSerializer
 
-    # def get_permissions(self, *args, **kwargs):
-    #     if self.request.method == 'POST':
-    #         return []
-    #     else:
-    #         return [permissions.IsAuthenticated()]
+    permission_classes = [
+        isDebugingOrSecretForGet,
+    ]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -31,7 +29,6 @@ class UserDetail(mixins.RetrieveModelMixin,
     serializer_class = TFCUserSerializer
     queryset = TFCUser.objects.all()
     permission_classes = [
-        # permissions.IsAuthenticated(),
         IsSelfOrReadOnly,
     ]
 
