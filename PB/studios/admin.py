@@ -142,7 +142,8 @@ def edit_instances(this_class_parent,data_list):
                 this_class_parent.recurrence_pattern=recurrence_pattern
             if recur_end_date: 
                 old_recur_end_date=this_class_parent.recur_end_date
-                this_class_parent.recur_end_date=recur_end_date  
+                this_class_parent.recur_end_date=recur_end_date 
+            this_class_parent.save() 
     
         # then edit for class instance according to pattern
         if original_date:
