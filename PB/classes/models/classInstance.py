@@ -1,8 +1,8 @@
 from django.db import models
 from django.db.models import CASCADE
-from studios.models.classParent import ClassParent
+from classes.models.classParent import ClassParent
 from accounts.models import TFCUser
-import datetime
+# import datetime
 
 class ClassInstance(models.Model):
     class_parent = models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="class_instances")

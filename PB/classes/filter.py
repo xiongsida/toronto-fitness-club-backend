@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from studios.models.classInstance import ClassInstance
+from classes.models.classInstance import ClassInstance
 
 class ClassInstanceFilter(filters.FilterSet):
     date_range_start = filters.DateFilter(field_name="date", lookup_expr='gte')

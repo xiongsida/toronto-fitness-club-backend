@@ -1,5 +1,5 @@
 from django.db import models
-from studios.models.classParent import ClassParent
+from classes.models.classParent import ClassParent
 from django.db.models import CASCADE
 
 class ClassCanellation(models.Model):

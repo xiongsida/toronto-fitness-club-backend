@@ -1,6 +1,6 @@
 from django import forms
-from studios.models.classInstanceException import ClassEdition, ClassCanellation
-from studios.models.classInstance import ClassInstance
+from classes.models.classInstanceException import ClassEdition, ClassCanellation
+from classes.models.classInstance import ClassInstance
 from django.db.models import Q
 import datetime
 
@@ -40,7 +40,7 @@ class ClassEditForm(forms.ModelForm):
         
         if original_date:
             if original_date<=datetime.date.today():
-                raise forms.ValidationError({'original_date': "sorry, cannot edit past date's class"})
+                raise forms.ValidationError({'original_date': "sorry, cannot edit past or today's class"})
             instances=ClassInstance.objects.filter(Q(date=original_date)&Q(class_parent=this_class_parent))
             if not instances:
                 raise forms.ValidationError({'original_date': "no class in this class's instances found by \

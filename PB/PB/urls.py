@@ -22,11 +22,12 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
+# from django.views.generic import TemplateView
 from .swagger_urls import swagger_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('studios/', include('studios.urls',namespace='studios')),
+    path("", include('studios.urls',namespace='studios')),
+    path("", include('classes.urls',namespace='classes')),
     path("", include('accounts.urls')),
     path("", include('subscriptions.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
