@@ -19,4 +19,6 @@ class ClassInstance(models.Model):
     def __str__(self):
         return self.class_parent.name+self.date.strftime('%Y-%m-%d')
     
+    class Meta:
+        unique_together=[['class_parent','date','start_time','end_time','coach']]
     

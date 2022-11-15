@@ -50,3 +50,12 @@ def get_distance(origin, destination):
     c = 2 * ATan2 (Sqrt(a), Sqrt(1 - a))
     d = radius * c
     return d
+
+
+def force_drop_classes_once_cancel_subscription(user,action_date):
+    user.class_parents.clear()
+    class_instances=user.class_instances
+    for instance in class_instances:
+        if instance.date>action_date:
+            user.class_instances.remove(instance)
+    return

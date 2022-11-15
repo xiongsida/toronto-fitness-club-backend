@@ -28,7 +28,7 @@ class ClassEditForm(forms.ModelForm):
         description = self.cleaned_data.get('description',None)
         start_time = self.cleaned_data.get('start_time',None)
         end_time = self.cleaned_data.get('end_time',None)
-        coach = str(self.cleaned_data.get('coach',''))
+        coach = self.cleaned_data.get('coach',None)
         capacity = self.cleaned_data.get('capacity',None)
         recurrence_pattern = self.cleaned_data.get('recurrence_pattern',None)
         recur_end_date = self.cleaned_data.get('recur_end_date',None)
@@ -43,29 +43,36 @@ class ClassEditForm(forms.ModelForm):
                 raise forms.ValidationError({'original_date': "sorry, cannot edit past date's class"})
             instances=ClassInstance.objects.filter(Q(date=original_date)&Q(class_parent=this_class_parent))
             if not instances:
-                raise forms.ValidationError({'original_date': "no class in this class's instances found by this original date, try another one!"})
-            if (new_date or start_time or end_time) and (not recurrence_pattern) and (not recur_end_date) and (not edit_for_all_future):
+                raise forms.ValidationError({'original_date': "no class in this class's instances found by \
+                    this original date, try another one!"})
+            if (new_date or start_time or end_time or description or coach or capacity!=None) and (not recurrence_pattern) and (not recur_end_date) and (not edit_for_all_future):
                 if new_date and ClassInstance.objects.filter(Q(date=new_date)&Q(class_parent=this_class_parent)):
-                    raise forms.ValidationError({'new_date': "sorry, there is already another class in the same date, we prefer just have one same class in a day!"})
-                print('change original date or time or datetime(may or may not :coach, description...), allowed')
+                    raise forms.ValidationError({'new_date': "sorry, there is already another class in the same date,\
+                        we prefer just have one same class in a day!"})
+                print('change one instance general information, allowed')
                 return # change original date or time or datetime(may or may not :coach, description...), allowed
-            if (description or coach or capacity) and (not recurrence_pattern) and (not recur_end_date) and (not edit_for_all_future):
-                print('change original just one class, not change time, just change coach..., also allowed')
-                return # change original just one class, not change time, just change coach..., also allowed
-            if edit_for_all_future and (not new_date) and (not recurrence_pattern) and (not recur_end_date):
+            if edit_for_all_future and (start_time or end_time or description or coach or capacity!=None) and (not new_date) and (not recurrence_pattern) and (not recur_end_date):
                 print('change all future after original class, but no change recurrence pattern, allowed')
                 return # change all future after original class, but no change recurrence pattern, allowed
             else:
                 raise forms.ValidationError({'original_date': "not sure what you want to change with all those fields"})
             
-        if edit_for_all_future:
-            if (description or coach or capacity) and (not recurrence_pattern) and (not recur_end_date):
+        elif edit_for_all_future:
+            
+            if (not new_date) and (description or coach or capacity!=None or start_time or end_time or recurrence_pattern or recur_end_date):
+                if recur_end_date and recur_end_date<this_class_parent.recur_end_date:
+                    raise forms.ValidationError({'recur_end_date': "you cannot edit your recur end date before your original one, \
+                        if you want to cancel some future course, use cancel form"})
                 print('change all future instance from now with new information, allowed')
-                return 
-            if (not new_date) and (recurrence_pattern or recur_end_date or start_time or end_time):
-                if recur_end_date<this_class_parent.recur_end_date:
-                    raise forms.ValidationError({'recur_end_date': "you cannot edit your recur end date before your original one, if you want to cancel some future course, use cancel form"})
-                print('change all future instance from now with new recur pattern, allowed')
-                return
-        raise forms.ValidationError({'edit_for_all_future': "not sure what you want to change with all those fields, if you want apply for all, click this"})
+                return   
+            # if (description or coach or capacity or start_time or end_time) and (not new_date) and (not recurrence_pattern) and (not recur_end_date):
+            #     print('change all future instance from now with new information, allowed')
+            #     return 
+            # if (not new_date) and (recurrence_pattern or recur_end_date):
+            #     if recur_end_date<this_class_parent.recur_end_date:
+            #         raise forms.ValidationError({'recur_end_date': "you cannot edit your recur end date before your original one, if you want to cancel some future course, use cancel form"})
+            #     print('change all future instance from now with new recur pattern, allowed')
+            #     return
+        raise forms.ValidationError({'edit_for_all_future': "not sure what you want to change with all those fields,\
+            if you want apply for all, click this"})
         

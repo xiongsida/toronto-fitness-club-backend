@@ -11,7 +11,7 @@ class ClassCanellation(models.Model):
     #     self.save()
         
 class ClassEdition(models.Model):
-    class_parent= models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="edtions")
+    class_parent= models.ForeignKey(to=ClassParent, on_delete=CASCADE, related_name="editions") # editions
     original_date = models.DateField(blank=True,null=True)
     description = models.CharField(max_length=512, null=True, blank=True)
     new_date = models.DateField(null=True,blank=True)
