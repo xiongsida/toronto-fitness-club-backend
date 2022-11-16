@@ -24,13 +24,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 # from django.views.generic import TemplateView
 from .swagger_urls import swagger_urls
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("api/", include('studios.urls', namespace='studios')),
-    path("api/", include('classes.urls', namespace='classes')),
-    path("api/", include('accounts.urls')),
-    path("api/", include('subscriptions.urls')),
+    path("", include('studios.urls',namespace='studios')),
+    path("", include('classes.urls',namespace='classes')),
+    path("", include('accounts.urls')),
+    path("", include('subscriptions.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
