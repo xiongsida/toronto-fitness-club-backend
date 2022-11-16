@@ -1,9 +1,10 @@
 from rest_framework.urlpatterns import format_suffix_patterns
-from django.urls import path
+from django.urls import re_path
 from accounts import views
 urlpatterns = [
-    path('users/', views.UserList.as_view(), name='tfcuser-list'),
-    path('users/<int:pk>/', views.UserDetail.as_view(), name='tfcuser-detail'),
+    re_path(r'^users/?$', views.UserList.as_view(), name='tfcuser-list'),
+    re_path(r'^users/<int:pk>/?$', views.UserDetail.as_view(),
+            name='tfcuser-detail'),
 ]
 
 
