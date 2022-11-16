@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "31adaeb7-d9cf-4caa-8ecb-35bd1693bbf8",
+		"_postman_id": "95018eba-eb78-4d7a-a41d-f417afd18258",
 		"name": "postman",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17947277"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -414,132 +413,567 @@
 			]
 		},
 		{
-			"name": "create a user",
-			"event": [
+			"name": "User",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var data = pm.response.json();",
-							"console.log(data.url)",
-							"pm.collectionVariables.set(\"user_url\", data.url);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"name": "create a user",
+					"event": [
 						{
-							"key": "username",
-							"value": "{{username}}",
-							"type": "default"
-						},
-						{
-							"key": "password",
-							"value": "{{password}}",
-							"type": "default"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"console.log(data.url)",
+									"pm.collectionVariables.set(\"user_url\", data.url);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/users/",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"port": "8000",
-					"path": [
-						"api",
-						"users",
-						""
-					]
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/users",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get and cache the token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"console.log(data.access)",
+									"pm.collectionVariables.set(\"token\", data.access);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "default",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/token",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete the user we created",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{user_url}}",
+							"host": [
+								"{{user_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list users (only available in DEBUG mode)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/users",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "get and cache the token",
-			"event": [
+			"name": "Payment Method",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var data = pm.response.json();",
-							"console.log(data.access)",
-							"pm.collectionVariables.set(\"token\", data.access);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "default",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"name": "add payment method",
+					"event": [
 						{
-							"key": "username",
-							"value": "{{username}}",
-							"type": "default"
-						},
-						{
-							"key": "password",
-							"value": "{{password}}",
-							"type": "default"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"console.log(data.url)",
+									"pm.collectionVariables.set(\"card_url\", data.url);"
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "http://127.0.0.1:8000/api/token/",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
 					],
-					"port": "8000",
-					"path": [
-						"api",
-						"token",
-						""
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "card_number",
+									"value": "4111111111111111",
+									"type": "default"
+								},
+								{
+									"key": "card_expire",
+									"value": "2029-01-01",
+									"type": "default"
+								},
+								{
+									"key": "security_code",
+									"value": "123",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/payment-methods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list payment methods (only available in DEBUG mode)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/payment-methods",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"payment-methods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete payment method",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{card_url}}",
+							"host": [
+								"{{card_url}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "delete the user we created",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{user_url}}",
-					"host": [
-						"{{user_url}}"
-					]
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "subscribe first plan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"console.log(data.url)",
+									"pm.collectionVariables.set(\"subscription_url\", data.url);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "plan",
+									"value": "{{first_plan_url}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subscriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list subscriptions  (only available in DEBUG mode)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/subscriptions",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel a subscription",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{subscription_url}}",
+							"host": [
+								"{{subscription_url}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Plan",
+			"item": [
+				{
+					"name": "list plans",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/plans",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view first plan detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{first_plan_url}}",
+							"host": [
+								"{{first_plan_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Receipt",
+			"item": [
+				{
+					"name": "view lastes receipt (do this after get user lastes receipt)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{latest_receipt_url}}",
+							"host": [
+								"{{latest_receipt_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user latest receipt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"recpt = data.receipt[data.receipt.length - 1]",
+									"console.log(recpt)",
+									"pm.collectionVariables.set(\"latest_receipt_url\", recpt);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user_url}}",
+							"host": [
+								"{{user_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upcoming Plan",
+			"item": [
+				{
+					"name": "Cancel upcoming plan",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{upcoming_plan}}",
+							"host": [
+								"{{upcoming_plan}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "view upcoming plan (do this after get user's upcoming plan)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{upcoming_plan}}",
+							"host": [
+								"{{upcoming_plan}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user's upcoming Plan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json();",
+									"console.log(data.upcoming_plan)",
+									"pm.collectionVariables.set(\"upcoming_plan\", data.upcoming_plan);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user_url}}",
+							"host": [
+								"{{user_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make first plan as upcoming plan",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "plan",
+									"value": "{{first_plan_url}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/upcoming-plans",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"upcoming-plans"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list all users upcoming plans (only available in DEBUG mode)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/upcoming-plans",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"upcoming-plans"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -580,7 +1014,7 @@
 		},
 		{
 			"key": "username",
-			"value": "chad",
+			"value": "TheChad",
 			"type": "default"
 		},
 		{
@@ -591,6 +1025,45 @@
 		{
 			"key": "user_url",
 			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "card_url",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "subscription_url\n",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "first_plan_url",
+			"value": "http://127.0.0.1:8000/api/plans/1",
+			"type": "default"
+		},
+		{
+			"key": "subscription_url",
+			"value": ""
+		},
+		{
+			"key": "latest_receipt_url",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "upcoming_plan",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "second_plan_url",
+			"value": "http://127.0.0.1:8000/api/plans/2",
+			"type": "default"
+		},
+		{
+			"key": "third_plan_url",
+			"value": "http://127.0.0.1:8000/api/plans/3",
 			"type": "default"
 		}
 	]
