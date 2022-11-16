@@ -5,23 +5,10 @@ from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeFie
 
 
 class Plan(models.Model):
-    interval = models.DurationField(
-        null=False,
-        blank=False,
-    )
-    available_date = models.DateTimeField(
-        null=False,
-        blank=False,
-        auto_now=True,
-    )
-    price = models.FloatField(
-        null=False,
-        blank=False,
-        validators=[MinValueValidator(0.0)],
-    )
-    is_active = models.BooleanField(
-        default=True
-    )
+    interval = models.DurationField()
+    available_date = models.DateTimeField(auto_now=True)
+    price = models.FloatField(validators=[MinValueValidator(0.0)])
+    is_active = models.BooleanField(default=True)
     description = models.TextField(blank=True, null=True)
 
 
@@ -40,8 +27,6 @@ class PaymentMethod(models.Model):
 class Subscription(models.Model):
     plan = models.ForeignKey(
         Plan,
-        blank=True,
-        null=True,
         on_delete=models.PROTECT,
         related_name='users_subscription',
     )
@@ -50,15 +35,8 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         related_name='subscription',
     )
-    subscribed_time = models.DateTimeField(
-        blank=True,
-        null=True,
-        auto_now=True
-    )
-    expired_time = models.DateTimeField(
-        blank=False,
-        null=False,
-    )
+    subscribed_time = models.DateTimeField(auto_now=True)
+    expired_time = models.DateTimeField()
 
 
 class UpComingPlan(models.Model):
@@ -69,8 +47,6 @@ class UpComingPlan(models.Model):
     )
     plan = models.ForeignKey(
         Plan,
-        blank=True,
-        null=True,
         on_delete=models.PROTECT,
         related_name='users_upcoming_plan',
     )

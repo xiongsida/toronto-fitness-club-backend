@@ -1,7 +1,7 @@
 
 from .models import *
 from .utils import *
-from datetime import datetime
+from datetime import datetime, timedelta
 from studios.utils import force_drop_classes_once_cancel_subscription
 
 
@@ -34,7 +34,7 @@ def make_subscription(user, plan: Plan):
 
 def cancel_subscription(user):
     force_drop_classes_once_cancel_subscription(
-        user, datetime.today() + datetime.timedelta(day=1))
+        user, datetime.today() + timedelta(days=1))
 
     ratio = (dbtime2utc(user.subscription.expired_time) -
              get_now2utc()) / \
@@ -73,7 +73,7 @@ def remove_expired_subscription(sub):
         ).save()
     else:
         force_drop_classes_once_cancel_subscription(
-            user, datetime.today() + datetime.timedelta(day=1))
+            user, datetime.today() + timedelta(days=1))
         sub.delete()
         if user_has_x(user, 'upcoming_plan'):
             user.upcoming_plan.delete()
