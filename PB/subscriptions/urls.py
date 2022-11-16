@@ -4,47 +4,47 @@ from subscriptions.views import *
 
 urlpatterns = [
     path(
-        'plans/',
+        'plans',
         PlanList.as_view(),
         name='plan-list',
     ),
     path(
-        'plans/<int:pk>/',
+        'plans/<int:pk>',
         PlanDetail.as_view(),
         name='plan-detail',
     ),
     path(
-        'subscriptions/',
+        'subscriptions',
         SubList.as_view(),
         name='subscriptions-list',
     ),
     path(
-        'subscriptions/<int:pk>/',
+        'subscriptions/<int:pk>',
         SubDetail.as_view(),
         name='subscription-detail',
     ),
     path(
-        'payment-methods/',
+        'payment-methods',
         PaymentMethodList.as_view(),
         name='paymentmethod-list',
     ),
     path(
-        'payment-methods/<int:pk>/',
+        'payment-methods/<int:pk>',
         PaymentMethodDetail.as_view(),
         name='paymentmethod-detail',
     ),
     path(
-        'upcoming-plans/',
+        'upcoming-plans',
         UpComingPlanList.as_view(),
         name='upcomingplan-list',
     ),
     path(
-        'upcoming-plans/<int:pk>/',
+        'upcoming-plans/<int:pk>',
         UpComingPlanDetail.as_view(),
         name='upcomingplan-detail',
     ),
     path(
-        'receipts/<int:pk>/',
+        'receipts/<int:pk>',
         ReceiptDetail.as_view(),
         name='receipt-detail',
     ),
