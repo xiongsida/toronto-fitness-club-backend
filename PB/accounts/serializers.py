@@ -1,7 +1,8 @@
-from rest_framework import serializers
 from .models import TFCUser
 from django.contrib.auth.password_validation import validate_password
-from rest_framework import serializers
+from rest_framework import serializers, pagination
+from subscriptions.models import Receipt
+from subscriptions.serializers import ReceiptSerializer
 
 
 class TFCUserSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,11 +16,6 @@ class TFCUserSerializer(serializers.HyperlinkedModelSerializer):
     )
     upcoming_plan = serializers.HyperlinkedRelatedField(
         view_name='upcomingplan-detail',
-        read_only=True,
-    )
-    receipt = serializers.HyperlinkedRelatedField(
-        many=True,
-        view_name='receipt-detail',
         read_only=True,
     )
 
@@ -37,7 +33,6 @@ class TFCUserSerializer(serializers.HyperlinkedModelSerializer):
             'payment_method',
             'subscription',
             'upcoming_plan',
-            'receipt',
         ]
         extra_kwargs = {
             'password': {'write_only': True}

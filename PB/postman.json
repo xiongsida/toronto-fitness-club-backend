@@ -423,8 +423,9 @@
 							"script": {
 								"exec": [
 									"var data = pm.response.json();",
-									"console.log(data.url)",
-									"pm.collectionVariables.set(\"user_url\", data.url);"
+									"console.log(data.url);",
+									"if (data.url)",
+									"    pm.collectionVariables.set(\"user_url\", data.url);"
 								],
 								"type": "text/javascript"
 							}
@@ -577,8 +578,9 @@
 							"script": {
 								"exec": [
 									"var data = pm.response.json();",
-									"console.log(data.url)",
-									"pm.collectionVariables.set(\"card_url\", data.url);"
+									"console.log(data.url);",
+									"if (data.url) ",
+									"    pm.collectionVariables.set(\"card_url\", data.url);"
 								],
 								"type": "text/javascript"
 							}
@@ -675,8 +677,10 @@
 							"script": {
 								"exec": [
 									"var data = pm.response.json();",
-									"console.log(data.url)",
-									"pm.collectionVariables.set(\"subscription_url\", data.url);"
+									"console.log(data.url);",
+									"if (data.url) {",
+									"    pm.collectionVariables.set(\"subscription_url\", data.url);",
+									"}"
 								],
 								"type": "text/javascript"
 							}
@@ -809,7 +813,7 @@
 			"name": "Receipt",
 			"item": [
 				{
-					"name": "view lastes receipt (do this after get user lastes receipt)",
+					"name": "view lastes receipt (do this after get user receipt)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -823,16 +827,17 @@
 					"response": []
 				},
 				{
-					"name": "get user latest receipt",
+					"name": "get user's receipts",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"var data = pm.response.json();",
-									"recpt = data.receipt[data.receipt.length - 1]",
-									"console.log(recpt)",
-									"pm.collectionVariables.set(\"latest_receipt_url\", recpt);"
+									"recpt = data.results[0].url;",
+									"console.log(recpt);",
+									"if (recpt)",
+									"    pm.collectionVariables.set(\"latest_receipt_url\", recpt);"
 								],
 								"type": "text/javascript"
 							}
@@ -842,9 +847,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{user_url}}",
+							"raw": "http://127.0.0.1:8000/api/receipts",
+							"protocol": "http",
 							"host": [
-								"{{user_url}}"
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"receipts"
 							]
 						}
 					},
@@ -1014,7 +1028,7 @@
 		},
 		{
 			"key": "username",
-			"value": "TheChad",
+			"value": "Chadddd",
 			"type": "default"
 		},
 		{

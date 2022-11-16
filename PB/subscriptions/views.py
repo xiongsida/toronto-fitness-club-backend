@@ -5,12 +5,13 @@ from accounts.permissions import *
 from .utils import *
 from .business_logic import *
 import datetime
-
+from studios.pagination import SubscriptionPagination
 
 class PlanList(mixins.ListModelMixin,
                generics.GenericAPIView):
     queryset = Plan.objects.filter(is_active=True)
     serializer_class = PlanSerializer
+    pagination_class = SubscriptionPagination
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -34,6 +35,7 @@ class SubList(mixins.CreateModelMixin,
         permissions.IsAuthenticated,
         isDebugingOrSecretForGet,
     ]
+    pagination_class = SubscriptionPagination
 
     def create(self, request, *args, **kwargs):
         if hasattr(request.user, "subscription") and request.user.subscription != None:
@@ -94,6 +96,7 @@ class PaymentMethodList(mixins.CreateModelMixin,
         permissions.IsAuthenticated,
         isDebugingOrSecretForGet,
     ]
+    pagination_class = SubscriptionPagination
 
     def create(self, request, *args, **kwargs):
         if user_has_x(request.user, 'payment_method'):
@@ -169,6 +172,7 @@ class UpComingPlanList(mixins.CreateModelMixin,
         permissions.IsAuthenticated,
         IsTheUser,
     ]
+    pagination_class = SubscriptionPagination
 
     def create(self, request, *args, **kwargs):
         if user_has_x(request.user, 'upcoming_plan'):
@@ -211,6 +215,21 @@ class UpComingPlanDetail(mixins.RetrieveModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+
+class ReceiptList(mixins.ListModelMixin,
+                  generics.GenericAPIView):
+
+    serializer_class = ReceiptSerializer
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    pagination_class = SubscriptionPagination
+
+    def get_queryset(self):
+        return Receipt.objects.filter(user=self.request.user).order_by('-paid_time')
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
 
 class ReceiptDetail(mixins.RetrieveModelMixin,
                     generics.GenericAPIView):

@@ -2,7 +2,7 @@ from accounts.models import TFCUser
 from accounts.serializers import TFCUserSerializer
 from rest_framework import generics, permissions, mixins
 from accounts.permissions import IsSelfOrReadOnly, isDebugingOrSecretForGet
-
+from studios.pagination import SubscriptionPagination
 
 class UserList(mixins.ListModelMixin,
                mixins.CreateModelMixin,
@@ -13,6 +13,7 @@ class UserList(mixins.ListModelMixin,
     permission_classes = [
         isDebugingOrSecretForGet,
     ]
+    pagination_class = SubscriptionPagination
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

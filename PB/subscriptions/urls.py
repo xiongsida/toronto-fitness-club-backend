@@ -44,6 +44,11 @@ urlpatterns = [
         name='upcomingplan-detail',
     ),
     path(
+        'receipts',
+        ReceiptList.as_view(),
+        name='receipt-list',
+    ),
+    path(
         'receipts/<int:pk>',
         ReceiptDetail.as_view(),
         name='receipt-detail',
