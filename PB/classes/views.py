@@ -60,7 +60,8 @@ class ClassEnrollView(APIView):
         if not request.user:
             return Response({'detail':'user not logged in'})
         student=request.user
-        apply_for_future=request.data.get('for_future',0)
+        print(request.data)
+        apply_for_future=request.data.get('for_future',"0")
         class_instance_id=kwargs.get('class_id',None)
         classinstance=get_object_or_404(ClassInstance,id=class_instance_id)
         class_parent_id=classinstance.class_parent.id
@@ -80,7 +81,7 @@ class ClassEnrollView(APIView):
             return Response({'detail':'enroll failed, this class is cancelled'})
         
         invalid_classes=[]
-        if apply_for_future==1:
+        if apply_for_future=="1":
             student.class_parents.add(classparent)
             future_instances=ClassInstance.objects.filter(Q(class_parent__id=class_parent_id) & Q(date__gt=classinstance.date))
             for future_instance in future_instances:
@@ -97,7 +98,8 @@ class ClassDropView(APIView):
         if not request.user:
             return Response({'detail':'user not logged in'})
         student=request.user
-        apply_for_future=request.data.get('for_future',0)
+
+        apply_for_future=request.data.get('for_future',"0")
         class_instance_id=kwargs.get('class_id',None)
         
         classinstance=get_object_or_404(ClassInstance,id=class_instance_id)
@@ -109,7 +111,7 @@ class ClassDropView(APIView):
         
         student.class_instances.remove(classinstance)
         
-        if apply_for_future==1:
+        if apply_for_future=="1":
             student.class_parents.remove(classparent)
             future_instances=ClassInstance.objects.filter(Q(class_parent__id=class_parent_id) & Q(date__gt=classinstance.date))
             for future_instance in future_instances:
