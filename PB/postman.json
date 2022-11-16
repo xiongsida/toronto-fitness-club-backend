@@ -1,0 +1,244 @@
+{
+	"info": {
+		"_postman_id": "11bf12c2-c7bc-4810-8cd9-963f0867d47c",
+		"name": "PB-api-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17947277"
+	},
+	"item": [
+		{
+			"name": "Get studios list can be ordered by distance",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/studios?user_lat=43.7069564&user_lng=-79.3916043&search=&name=&amenities__type=&classes__name=&classes__coach=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"studios"
+					],
+					"query": [
+						{
+							"key": "user_lat",
+							"value": "43.7069564",
+							"description": "latitue of user's location"
+						},
+						{
+							"key": "user_lng",
+							"value": "-79.3916043",
+							"description": "longitude of user's location "
+						},
+						{
+							"key": "search",
+							"value": "",
+							"description": "general search function"
+						},
+						{
+							"key": "name",
+							"value": "",
+							"description": "studio name filter"
+						},
+						{
+							"key": "amenities__type",
+							"value": "",
+							"description": "amenity type filter"
+						},
+						{
+							"key": "classes__name",
+							"value": "",
+							"description": "class name filter"
+						},
+						{
+							"key": "classes__coach",
+							"value": "",
+							"description": "class coach filter"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a studio details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/studios/:studio_id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"studios",
+						":studio_id"
+					],
+					"variable": [
+						{
+							"key": "studio_id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get classes list ordered by time",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/classes?studio_id=&scope=&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"classes"
+					],
+					"query": [
+						{
+							"key": "studio_id",
+							"value": "",
+							"description": "when studio id is specified, list classes under this studio, otherwise, list the request users' classes"
+						},
+						{
+							"key": "scope",
+							"value": "",
+							"description": "this is used when listing user's classes, either \"myschedule\" or \"myhistory\""
+						},
+						{
+							"key": "search",
+							"value": "",
+							"description": "general search for classes"
+						},
+						{
+							"key": "class_parent__name",
+							"value": "",
+							"description": "class name filter"
+						},
+						{
+							"key": "coach",
+							"value": "",
+							"description": "class coach filter"
+						},
+						{
+							"key": "date",
+							"value": "",
+							"description": "class date filter"
+						},
+						{
+							"key": "date_range_start",
+							"value": "",
+							"description": "date range query, left end"
+						},
+						{
+							"key": "date_range_end",
+							"value": "",
+							"description": "date range query, right end"
+						},
+						{
+							"key": "time_range_start",
+							"value": "",
+							"description": "time range query, left end"
+						},
+						{
+							"key": "time_range_end",
+							"value": "",
+							"description": "time range query, right end"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post to enroll classes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "for_future",
+							"value": "1",
+							"description": "integer value, either 1 or 0, if not specified, default is 0, if it is 1, enroll for all future instances",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/classes/:class_id/enroll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"classes",
+						":class_id",
+						"enroll"
+					],
+					"variable": [
+						{
+							"key": "class_id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post to drop classes",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "for_future",
+							"value": "1",
+							"description": "integer value, either 1 or 0, if not specified, default is 0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/classes/:class_id/drop",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"classes",
+						":class_id",
+						"drop"
+					],
+					"variable": [
+						{
+							"key": "class_id",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
