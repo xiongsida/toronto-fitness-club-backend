@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "95018eba-eb78-4d7a-a41d-f417afd18258",
+		"_postman_id": "5a91140d-35a2-439a-9bce-92003b4a5990",
 		"name": "postman",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,12 +14,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/studios?user_lat=43.7069564&user_lng=-79.3916043&search=&name=&amenities__type=&classes__name=&classes__coach=&page=1",
+							"raw": "http://localhost:{{port_number}}/api/studios?user_lat=43.7069564&user_lng=-79.3916043&search=&name=&amenities__type=&classes__name=&classes__coach=&page=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"studios"
@@ -75,12 +75,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/studios/:studio_id",
+							"raw": "http://localhost:{{port_number}}/api/studios/:studio_id",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"studios",
@@ -107,12 +107,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/classes?studio_id=&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
+							"raw": "http://localhost:{{port_number}}/api/classes?studio_id=&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"classes"
@@ -184,12 +184,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/classes?scope=myhistory&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
+							"raw": "http://localhost:{{port_number}}/api/classes?scope=myhistory&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"classes"
@@ -261,12 +261,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/classes?scope=myschedule&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
+							"raw": "http://localhost:{{port_number}}/api/classes?scope=myschedule&search=&class_parent__name=&coach=&date=&date_range_start=&date_range_end=&time_range_start=&time_range_end=&page=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"classes"
@@ -349,12 +349,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/classes/:class_id/enroll",
+							"raw": "http://localhost:{{port_number}}/api/classes/:class_id/enroll",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"classes",
@@ -388,12 +388,12 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/classes/:class_id/drop",
+							"raw": "http://localhost:{{port_number}}/api/classes/:class_id/drop",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"classes",
@@ -453,7 +453,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/users",
+							"raw": "http://127.0.0.1:{{port_number}}/api/users",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -461,7 +461,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"users"
@@ -511,7 +511,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/token",
+							"raw": "http://127.0.0.1:{{port_number}}/api/token",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -519,7 +519,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"token"
@@ -548,7 +548,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/users",
+							"raw": "http://127.0.0.1:{{port_number}}/api/users",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -556,7 +556,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"users"
@@ -610,7 +610,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/payment-methods",
+							"raw": "http://127.0.0.1:{{port_number}}/api/payment-methods",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -618,7 +618,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"payment-methods"
@@ -633,7 +633,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/payment-methods",
+							"raw": "http://127.0.0.1:{{port_number}}/api/payment-methods",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -641,7 +641,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"payment-methods"
@@ -700,7 +700,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subscriptions",
+							"raw": "http://127.0.0.1:{{port_number}}/api/subscriptions",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -708,7 +708,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"subscriptions"
@@ -723,7 +723,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/subscriptions",
+							"raw": "http://127.0.0.1:{{port_number}}/api/subscriptions",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -731,7 +731,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"subscriptions"
@@ -776,7 +776,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/plans",
+							"raw": "http://127.0.0.1:{{port_number}}/api/plans",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -784,7 +784,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"plans"
@@ -847,7 +847,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/receipts",
+							"raw": "http://127.0.0.1:{{port_number}}/api/receipts",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -855,7 +855,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"receipts"
@@ -940,7 +940,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/upcoming-plans",
+							"raw": "http://127.0.0.1:{{port_number}}/api/upcoming-plans",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -948,7 +948,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"upcoming-plans"
@@ -970,7 +970,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/upcoming-plans",
+							"raw": "http://127.0.0.1:{{port_number}}/api/upcoming-plans",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -978,7 +978,7 @@
 								"0",
 								"1"
 							],
-							"port": "8000",
+							"port": "{{port_number}}",
 							"path": [
 								"api",
 								"upcoming-plans"
@@ -1078,6 +1078,11 @@
 		{
 			"key": "third_plan_url",
 			"value": "http://127.0.0.1:8000/api/plans/3",
+			"type": "default"
+		},
+		{
+			"key": "port_number",
+			"value": "8000",
 			"type": "default"
 		}
 	]
