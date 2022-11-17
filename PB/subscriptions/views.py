@@ -170,7 +170,6 @@ class UpComingPlanList(mixins.CreateModelMixin,
     permission_classes = [
         isDebugingOrSecretForGet,
         permissions.IsAuthenticated,
-        IsTheUser,
     ]
     pagination_class = SubscriptionPagination
 
