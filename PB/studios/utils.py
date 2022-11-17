@@ -52,10 +52,10 @@ def get_distance(origin, destination):
     return d
 
 
-def force_drop_classes_once_cancel_subscription(user,action_date):
+def force_drop_classes_once_cancel_subscription(user,action_datetime):
     user.class_parents.clear()
     class_instances=user.class_instances.all()
     for instance in class_instances:
-        if instance.date>action_date:
+        if datetime.datetime.combine(instance.date,instance.start_time)>=action_datetime:
             user.class_instances.remove(instance)
     return
